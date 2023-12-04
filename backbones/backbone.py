@@ -47,6 +47,7 @@ class BackboneModel():
         """
         Replace the classifier of the model
         """
+        # This method needs to be implemented in the child classes
         pass
     
     def create_classifier_network(self, options):
@@ -74,3 +75,11 @@ class BackboneModel():
         """
         self.replace_classifier(options)
         self.model.load_state_dict(options['state_dict'])
+        
+    def requires_grad(b: bool):
+        """
+        Pass True if you want to train this network, false otherwise
+        :param b: True if layers require gradient, False otherwise
+        """
+        for param in self.model.parameters():
+            param.requires_grad = b

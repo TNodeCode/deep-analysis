@@ -1,3 +1,4 @@
+from backbones.ae import Autoencoder_Backbone
 from backbones.densenet121 import DenseNet121
 from backbones.densenet161 import DenseNet161
 from backbones.densenet169 import DenseNet169
@@ -13,14 +14,17 @@ from backbones.resnet50 import ResNet50
 from backbones.resnet101 import ResNet101
 from backbones.resnet152 import ResNet152
 from backbones.retinanetv2 import RetinaNetV2
+from backbones.tripletenc import TripletEncoder
 from backbones.unet import UNet
 from backbones.vgg11 import VGG11
 from backbones.vgg13 import VGG13
 from backbones.vgg16 import VGG16
 from backbones.vgg19 import VGG19
 from backbones.vitb16 import ViTB16
+from backbones.wae_mmd import WAE_MMD_Backbone
 
 models = {
+    "autoencoder": Autoencoder_Backbone,
     "densenet121": DenseNet121,
     "densenet161": DenseNet161,
     "densenet169": DenseNet169,
@@ -42,6 +46,7 @@ models = {
     "vgg16": VGG16,
     "vgg19": VGG19,
     "vitb16": ViTB16,
+    "wae_mmd": WAE_MMD_Backbone,
 }
 
 def load_backbone(name: str, filepath: str = None):

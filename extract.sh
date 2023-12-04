@@ -1,6 +1,6 @@
-for model in resnet152 fasterrcnn_resnet50_v2 maskrcnnv2 fcos retinanetv2
+for model in wae_mmd
 do
-   for layer in f1 f2 f3 f4
+   for layer in e1 e2 e3 e4
    do
       for components in 1 2 3 4 5
       do
