@@ -19,6 +19,20 @@ class BackboneModel():
             device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
             options = torch.load(self.filepath, map_location=torch.device(device))
             self.load_state_dict(options)
+            
+    def train(self):
+        self.model.train()
+        return self
+            
+    def eval(self):
+        self.model.eval()
+        return self
+    
+    def zero_grad(self):
+        self.model.zero_grad()
+    
+    def parameters(self):
+        return self.model.parameters()
     
     def get_features(self, input_batch, key):
         """

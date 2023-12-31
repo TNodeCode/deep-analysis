@@ -19,6 +19,12 @@ class ResNet50(BackboneModel):
             "layer3.5.relu_2": self.feature_keys[2],
             "layer4.2.relu_2": self.feature_keys[3],
         }
+        self.gradcam_layers = [
+            self.model.layer4[-1], 
+            self.model.layer3[-2], 
+            self.model.layer2[-3], 
+            self.model.layer1[-4],            
+        ]
         self.feature_extractor = create_feature_extractor(
             self.model,
             self.return_nodes,

@@ -7,6 +7,7 @@ from backbones.backbone import BackboneModel
 class MobileNetV3Small(BackboneModel):
     def __init__(self):
         super().__init__()
+        self.name = "mobilnetv3small"
         self.feature_keys = [f"c{i}" for i in range(1,7)]
         self.model = models.mobilenet_v3_small(weights=models.MobileNet_V3_Small_Weights.DEFAULT)
         self.return_nodes = return_nodes={
@@ -21,3 +22,4 @@ class MobileNetV3Small(BackboneModel):
             self.model,
             self.return_nodes,
         )
+        self.gradcam_layers = [self.model.features[i] for i in list(range(-1,-10,-1))]

@@ -11,7 +11,7 @@ class ViTB16(BackboneModel):
         self.name = "vitb16"
         self.feature_keys = ["conv"] + [f"a{i}" for i in range(1,13)]
         self.model = vit_b_16(weights=ViT_B_16_Weights.DEFAULT)
-        self.classifier = self.model.heads
+        self.classifier = self.model.heads.head
         self.classifier_input_size = 2048
         self.return_nodes = return_nodes={
             "conv_proj": self.feature_keys[0],
@@ -28,14 +28,41 @@ class ViTB16(BackboneModel):
             "encoder.layers.encoder_layer_10.self_attention": self.feature_keys[11],
             "encoder.layers.encoder_layer_11.self_attention": self.feature_keys[12],
         }
+        self.gradcam_layers = [
+            self.model.encoder.layers.encoder_layer_11.ln_1,   
+            self.model.encoder.layers.encoder_layer_10.mlp,
+            self.model.encoder.layers.encoder_layer_10.ln_2,
+            self.model.encoder.layers.encoder_layer_10.ln_1,     
+            self.model.encoder.layers.encoder_layer_9.mlp,
+            self.model.encoder.layers.encoder_layer_9.ln_2,
+            self.model.encoder.layers.encoder_layer_9.ln_1,
+            self.model.encoder.layers.encoder_layer_8.mlp,
+            self.model.encoder.layers.encoder_layer_8.ln_2,
+            self.model.encoder.layers.encoder_layer_8.ln_1,
+            self.model.encoder.layers.encoder_layer_7.mlp,
+            self.model.encoder.layers.encoder_layer_7.ln_2,
+            self.model.encoder.layers.encoder_layer_7.ln_1,
+            self.model.encoder.layers.encoder_layer_6.mlp,
+            self.model.encoder.layers.encoder_layer_6.ln_2,
+            self.model.encoder.layers.encoder_layer_6.ln_1,           
+        ]
         self.feature_extractor = create_feature_extractor(
             self.model,
             self.return_nodes,
         )
         self.load_weights()
+        
+    def gradcam_reshape_transform(self, tensor, height=14, width=14):
+        result = tensor[:, 1 :  , :].reshape(tensor.size(0),
+            height, width, tensor.size(2))
+
+        # Bring the channels to the first dimension,
+        # like in CNNs.
+        result = result.transpose(2, 3).transpose(1, 2)
+        return result
 
     def set_classifier(self, classifier):
-        self.model.heads = classifier
+        self.model.heads.head = classifier
         
     def get_features(self, input_batch, key):
         x = super().get_features(input_batch, key)[0]
